@@ -1,0 +1,15 @@
+MapChain
+
+Task: Implement of dapp(Games) Реализовать децентрализованное приложение DAPP (Игры)
+
+Description:
+
+Create or join a quest anywhere in the world
+
+Our project: The platform for creation smart-contracts for tours
+
+Mission and vision: Anyone can create his own quest. Anyone can choose the best quest. Smart contract will ensure the security of payment and reliability of information
+
+Prezentation of our project is available: https://drive.google.com/open?id=1elNpoPUM19ho-GsSoyJ1CWKM6PUPCksA
+
+Video demonstration is available: https://youtu.be/HJqvW1QqHWY
