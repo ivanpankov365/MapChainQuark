@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MapChain</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!--<meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">-->
+    <!--<link href="css/ratchet.css" rel="stylesheet">-->
+    <script src="navi.js"></script>
+    <script src="config.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quarkchain-web3@0.1.1/dist/quarkchain-web3.js"></script>
+    <script src="createQestSubmit.js"></script>
+    <script src="deployContract.js"></script>
+    <!--//<script src="main.css"></script>-->
+    <script src="quest.js"></script>
+
+    <script>
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            alert('Please activate MetaMask Plugin and reload page! You can find it here: https://metamask.io/')
+        }
+    </script>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+            height: 100%;
+            width: 77%;
+            position: absolute;
+            left: 350px;
+            margin: 0;
+            padding: 0;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+           /* height: 100%;
+            width: 87%;
+            position: absolute;
+            left: 190px;
+            margin: 0;
+            padding: 0;*/
+        }
+
+        #left_panel {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            /*left: 350px;*/
+            margin: 0;
+            padding: 0;
+            background-color: snow;
+        }
+
+        #description_of_step {
+            font-size: 36px;
+            height: 50%;
+            width: 21%;
+            position: absolute;
+            background-color: white;
+            top: 200px;
+            margin: 0;
+            padding: 0;
+        }
+        #description_of_Quest {
+            font-size: 36px;
+            height: 150px;
+            width: 400px;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+        }
+        #button {
+            height: 8%;
+            width: 8%;
+            position: absolute;
+            bottom: 100px;
+            left: 100px;
+            margin: 0;
+            padding: 0;
+        }
+        #button_create {
+            height: 8%;
+            width: 8%;
+            position: absolute;
+            bottom: 30px;
+            left: 100px;
+            margin: 0;
+            padding: 0;
+        }
+        #nameQuest {
+            font-size: 36px;
+            height: 10%;
+            width: 21%;
+            position: absolute;
+            background-color: white;
+            top: 100px;
+            margin: 0;
+            padding: 0;
+        }
+
+        #create_contract {
+            display: inline;
+            z-index: 100;
+        }
+
+        *{
+            font-family: Areal;
+        }
+        #create_contract{
+            width:200px;
+            height:150px;
+            background-color: #ccc;
+            margin:0px auto;
+            padding:10px;
+            font-size:30px;
+            color: #fff;
+        }
+        #create_contract{
+            width:100%;
+            min-height:100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow:hidden;
+            position:fixed;
+            top:0px;
+        }
+        #create_contract_content{
+            font-family: Areal;
+            margin:40px auto 0px auto;
+            width:500px;
+            height: 70%;
+            padding:10px;
+            background-color: #c5c5c5;
+            border-radius:5px;
+            box-shadow: 0px 0px 10px #000;
+        }
+        #my_button{
+            font-family: Areal;
+            height:50px;
+        }
+
+        .button{
+            text-decoration:none;
+            text-align:center;
+            padding:11px 32px;
+            border:solid 1px #004F72;
+            -webkit-border-radius:4px;
+            -moz-border-radius:4px;
+            border-radius: 4px;
+            font:18px Arial, Helvetica, sans-serif;
+            font-weight:bold;
+            color:#E5FFFF;
+            background-color:#3BA4C7;
+            background-image: -moz-linear-gradient(top, #3BA4C7 0%, #1982A5 100%);
+            background-image: -webkit-linear-gradient(top, #3BA4C7 0%, #1982A5 100%);
+            background-image: -o-linear-gradient(top, #3BA4C7 0%, #1982A5 100%);
+            background-image: -ms-linear-gradient(top, #3BA4C7 0% ,#1982A5 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1982A5', endColorstr='#1982A5',GradientType=0 );
+            background-image: linear-gradient(top, #3BA4C7 0% ,#1982A5 100%);
+            -webkit-box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+            -moz-box-shadow: 0px 0px 2px #bababa,  inset 0px 0px 1px #ffffff;
+            box-shadow:0px 0px 2px #bababa, inset 0px 0px 1px #ffffff;
+        }
+
+        .textarea{
+            display: block;
+            /*position: absolute;*/
+            z-index: 2;
+            margin: 0;
+            border: 2px solid #74637f;
+            border-radius: 0;
+            color: #444;
+            background-color: transparent;
+            overflow: auto;
+            resize: none;
+            transition: transform 1s;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="create_contract">
+
+    <form id="create_contract_content" action="">
+        <h8>Hi! Here you can create your new super mega quest!!</h8><br><br>
+        <h10>Put description of your Quest</h10>
+        <p>
+            <textarea class="textarea" id="description_of_Quest" placeholder="description of Quest" required></textarea>
+        </p>
+        <p><b>Price for your quest:</b><br>
+            <input id="_price" type="text" size="40" placeholder="$">
+        </p>
+        <input class="button" id="my_button" type="button" onclick="createQestSubmit()" value="Create my Quest"><br />
+    </form>
+
+</div>
+
+
+
+<div id="left_panel">
+    <h1>Create you Quest!</h1>
+    <script>
+        if(step == 1){
+            let leftPanel = document.getElementById('left_panel');
+            let nameQuest = document.createElement('textarea');
+            nameQuest.id = 'nameQuest';
+            nameQuest.placeholder = 'name of your Quest';
+            nameQuest.className = 'textarea'
+            let textarea = document.getElementById('description_of_step');
+            leftPanel.insertBefore(nameQuest,textarea);
+        }
+    </script>
+    <textarea class="textarea" id="description_of_step" placeholder="description of step" required></textarea><br><br>
+    <button class="button" id="button" onclick="nextStep(lng,lat)">Create Next Step</button>
+    <button class="button" id="button_create" onclick="create()">Create Quest</button>
+</div>
+
+<div id="map"></div>
+<script>
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 55.761315757185166, lng: 37.65203475952149},
+            zoom: 8
+        });
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            placeMarker(event.latLng);
+            pointLocation = event.latLng;
+            console.log('pointLocation: ', pointLocation);
+        });
+
+    }
+
+    function placeMarker(location) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+        console.log('location.LatLng', location.lat());
+        console.log('location.LatLng', location.lng());
+        lng = location.lat();
+        lat = location.lng();
+        // markers.push(marker);
+    }
+</script>
+
+
+<script>
+
+
+//document.getElementById("create").addEventListener("click", function() {
+	// Получаем токен для авторизации
+	/*getToken(email,password).then((token)=>{
+		createNaviaddress(token);
+	});*/
+//});
+
+
+
+</script>
+<script src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        //Скрыть PopUp при загрузке страницы
+        PopUpHide();
+    });
+    //Функция отображения PopUp
+    function PopUpShow(){
+        $("#create_contract").show();
+    }
+    //Функция скрытия PopUp
+    function PopUpHide(){
+        $("#create_contract").hide();
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtJsuDvrKcBeURzwglw1kfPDdOyEAEtPU&callback=initMap"
+        async defer></script>
+</body>
+</body>
+</html>
